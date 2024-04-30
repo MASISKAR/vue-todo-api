@@ -8,7 +8,6 @@ const TaskSchema = new Schema(
     owner: {
       type: ObjectId,
       ref: 'User',
-      required: true
     },
       title: {
       type: String,
