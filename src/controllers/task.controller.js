@@ -6,12 +6,13 @@ class TaskController {
     
     create = async (req, res, next) => {
         try {
-            const taskData = {
-                owner: ObjectId(res.locals.userId),
-                ...req.body,
+            if(!req.body.date){
+                req.body.date = ''
             }
-
-            const task = await taskSchema.create(taskData);
+            else if(new Date(req.body.date).toString() === 'Invalid date'){
+                throw errorConfig.dateValidationError;
+            }
+            const task = await taskSchema.create(req.body);
             res.json(task);
         } catch (err) {
             next(err)
@@ -22,8 +23,6 @@ class TaskController {
         try {
             const task = await taskSchema.findOne({
                 _id: req.params.id,
-                // owner: res.locals.userId
-                //fixme
             });
             if (!task) throw errorConfig.taskNotFound;
             res.json(task.toObject());
@@ -36,17 +35,34 @@ class TaskController {
         try {
             const task = await taskSchema.findOne({
                 _id: req.params.id,
-                // owner: res.locals.userId
-                //fixme
             });
             if (!task) throw errorConfig.taskNotFound;
             
             const {title, description, date, status} = req.body;
-            title && ( task.title = title);
-            description && (task.description = description);
-            date && ( task.date = date);
-            status && ( task.status = status);
-            
+            let hasUpdated = false;
+            if(task.title !== title){
+                task.title = title;
+                hasUpdated = true;
+            }
+            if(task.description !== description){
+                task.description = description;
+                hasUpdated = true;
+            }
+            const dateString = new Date(date).toString();
+            if(date && dateString === 'Invalid date'){
+                throw errorConfig.dateValidationError;
+            }
+            if(new Date(task.date).toString() !== dateString){
+                task.date = date;
+                hasUpdated = true;
+            }
+            if(task.status !== status){
+                task.status = status;
+                hasUpdated = true;
+            }
+            if(!hasUpdated){
+                throw errorConfig.nothingToUpdate;
+            }
             await task.save();
             res.json(task.toObject());
         } catch (err) {
@@ -58,9 +74,7 @@ class TaskController {
     delete = async (req, res, next) => {
         try {
             const task = await taskSchema.findOneAndDelete({
-                _id: req.params.id,
-                // owner: res.locals.userId
-                //fixme
+                _id: req.params.id
             });
             
             if (!task) throw errorConfig.taskNotFound;
@@ -89,10 +103,7 @@ class TaskController {
             const {userId} = res.locals,
                     {query} = req;
             
-            const dbQuery = {
-                //fixme
-                // owner: userId
-            };
+            const dbQuery = {};
     
             const {status} = query;
             if(status && /^active$|^done$/ig.test(status)){

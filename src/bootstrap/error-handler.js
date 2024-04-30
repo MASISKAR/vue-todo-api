@@ -5,28 +5,15 @@ const create_error = require('http-errors'),
 
 
 module.exports = app => {
-  // tools
-  let format_err = err => {
+  const format_err = err => {
     if (err.ref) return errorConfig[err.ref];
-    
-    if (err.errors) {
-      // format mongo unique error
-      let errorKey = Object.keys(err.errors)[0];
-      return {
-        name: errorConfig.fieldAlreadyExists.name,
-        message: err.errors[errorKey].message,
-        status: errorConfig.fieldAlreadyExists.status,
-        private: err.private || false
-      }
-    } else {
       return {
         message: err.message,
         name: err.name,
         private: err.private || false,
         status: err.status || 500,
-        info: err.info || undefined
-      }
-    }
+        info: err.info
+      };
   };
   
   // catch 404 and forward to error handler

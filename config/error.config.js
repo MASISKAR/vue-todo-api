@@ -48,7 +48,7 @@ const {uploadedFileSizeLimit} = require("./attachment.config");
   },
   nothingToUpdate: {
     name: "NothingToUpdate",
-    message: "no data send for update",
+    message: "There is nothing to update",
     status: 400
   },
   wrongRefreshToken: {
@@ -81,26 +81,11 @@ const {uploadedFileSizeLimit} = require("./attachment.config");
     message: "Task is not found",
     status: 404
   },
-    nothingToRemove: {
-      name: "nothingToRemove",
-      message: "There is nothing to remove",
-      status: 404
-    },
-  imageTypeValidationError: {
-    name: "imageTypeValidationError",
-    message: "File type must be jpg, jpeg or png",
-    status: 403
-  },
-    fileTypeValidationError: {
-      name: "fileTypeValidationError",
-      message: "Unacceptable file type",
+    dateValidationError: {
+      name: "dateValidationError",
+      message: "Invalid date",
       status: 403
     },
-  fileSizeValidationError: {
-    name: "fileSizeValidationError",
-    message: `File size must be less than ${uploadedFileSizeLimit} mb`,
-    status: 403
-  },
   wrongPasswordError: {
     name: "wrongPasswordError",
     message: "Wrong password",

@@ -32,7 +32,7 @@ const error_response = ([error]) => {
 		error : {
 			name: 'ValidationError',
 			message: `${error.dataPath} ${error.message}${enumStr}`,
-			status: 422
+			status: 403
 		}
 	};
 };
@@ -56,11 +56,11 @@ module.exports = schemaName => async (req, res, next) => {
       await validator.validate(schemaName, validationData)
     } catch (err) {
       if (!(err instanceof Ajv.ValidationError)) throw err;
-      return res.status(400).json(error_response(err.errors)).end();
+      return res.status(403).json(error_response(err.errors)).end();
     }
   } else {
     const valid = validator.validate(schemaName, validationData);
-		if (!valid) return res.status(400).json(error_response(validator.errors)).end();
+		if (!valid) return res.status(403).json(error_response(validator.errors)).end();
   }
   return next();
 };
