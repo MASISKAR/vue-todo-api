@@ -17,7 +17,7 @@
           "enum": ["active", "done"]
         },
         "date": {
-          "type": "string"
+          "type": ["string", "null"]
         }
       }
     }
