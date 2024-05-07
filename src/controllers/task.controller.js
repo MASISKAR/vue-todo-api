@@ -52,7 +52,7 @@ class TaskController {
             if(date && dateString === 'Invalid date'){
                 throw errorConfig.dateValidationError;
             }
-            if(new Date(task.date).toString() !== dateString){
+            if(date && new Date(task.date).toString() !== dateString){
                 task.date = date;
                 hasUpdated = true;
             }
