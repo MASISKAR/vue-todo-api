@@ -16,9 +16,7 @@
           "maxLength": 254
         },
         "message": {
-          "type": "string",
-          "minLength": 1,
-          "maxLength": 1000
+          "type": "string"
         }
       },
       "required": [
